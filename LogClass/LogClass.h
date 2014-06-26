@@ -18,7 +18,12 @@ public:
   virtual std::string getName();
   virtual int getAttack();
 
-  std::ostream& operator<<(std::ostream& os);
+  friend std::ostream& operator<<(std::ostream& os, Loggable& loggable) {
+    time_t T = time(NULL);
+    os << ctime(&T) << "\t" << loggable.getError() << " ID: " << loggable.getId() << " " << " failed to initialize at: "; loggable.log() ;
+
+    return os << std::endl;
+  }
 };
 
 class Entity : public Loggable { 
@@ -61,10 +66,3 @@ public:
   void log();
 
 };
-
-std::ostream& Loggable::operator<<(std::ostream& os){
-  time_t T = time(NULL);
-  os << ctime(&T) << "\t" << this->getError() << " ID: " << this->getId() << " " << " failed to initialize at: "; this->log() ;
-
-  return os << std::endl;
-}
